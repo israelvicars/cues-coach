@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Archetype {
+  PUSHOVER
+  COLD_FISH
+  CHARMER
+}
+
+enum Category {
+  WARMTH
+  COMPETENCE
+  ANTI_CUE
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  archetype     Archetype // ENUM: PUSHOVER, COLD_FISH, CHARMER
+  createdAt     DateTime @default(now())
+  
+  // Gamification
+  warmthScore   Int      @default(0)
+  competenceScore Int    @default(0)
+  currentStreak Int      @default(0)
+  
+  logs          CueLog[]
+}
+
+model Cue {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  instruction String   @db.Text
+  category    Category // ENUM: WARMTH, COMPETENCE, ANTI_CUE
+  difficulty  String   // Easy, Medium, Hard
+  
+  logs        CueLog[]
+}
+
+model CueLog {
+  id          String   @id @default(uuid())
+  userId      String
+  cueId       String
+  completedAt DateTime @default(now())
+  reflection  String?  @db.Text
+  
+  user        User     @relation(fields: [userId], references: [id])
+  cue         Cue      @relation(fields: [cueId], references: [id])
+
+  @@index([userId, completedAt])
+}
