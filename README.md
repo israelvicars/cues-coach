@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Cues Coach
 
-## Getting Started
+**The Cues Coach** is a mobile-first web application designed to help users master social skills through gamified, daily micro-challenges. Based on the "Science of People" framework, it balances **Warmth** and **Competence** to help users achieve the "Charmer" archetype.
 
-First, run the development server:
+## 🎯 Product Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Social skills can be learned. The Cues Coach breaks down complex social interactions into small, actionable "Cues" that users practice in the real world.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Core Features
+*   **Charisma Audit (Onboarding)**: A psychological assessment that segments users into one of three archetypes:
+    *   **Pushover**: High Warmth, Low Competence.
+    *   **Cold Fish**: Low Warmth, High Competence.
+    *   **Charmer**: Balanced Warmth and Competence.
+*   **Daily Cues**: A personalized daily challenge selected to target the user's specific weaknesses (e.g., a "Cold Fish" receives Warmth cues).
+*   **Reflection Loop**: After completing a cue, users log a quick reflection to reinforce learning.
+*   **Gamification**:
+    *   **Charisma Meter**: Visualizes the balance between Warmth and Competence.
+    *   **Streaks**: Tracks daily consistency.
+    *   **Library**: A history of mastered cues.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Technical Implementation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project is built with a modern, type-safe stack focusing on performance and developer experience.
 
-## Learn More
+*   **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/)
+*   **Database**: [Supabase](https://supabase.com/) (PostgreSQL)
+*   **ORM**: [Prisma](https://www.prisma.io/) (v5)
+*   **Styling**:
+    *   [Tailwind CSS 4](https://tailwindcss.com/) (CSS-first configuration)
+    *   [Shadcn/UI](https://ui.shadcn.com/) (Accessible components)
+    *   **Design System**: Custom OKLCH color palette & Nunito typography.
+*   **Animation**: [Framer Motion](https://www.framer.com/motion/)
+*   **State Management**: Server Actions & React Server Components.
+*   **Authentication**: Lightweight cookie-based session (Prototype).
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Developer Guide
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
+*   Node.js 18+
+*   npm
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Setup
 
-## Deploy on Vercel
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/israelvicars/cues-coach.git
+    cd cues-coach
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3.  **Environment Variables**:
+    Create a `.env` file in the root directory. You will need Supabase credentials.
+    ```bash
+    # Connect to Supabase via connection pooling (Transaction Mode)
+    DATABASE_URL="postgresql://postgres.[ref]:[password]@[region].pooler.supabase.com:6543/postgres?pgbouncer=true"
+
+    # Direct connection to the database (Session Mode)
+    DIRECT_URL="postgresql://postgres.[ref]:[password]@[region].pooler.supabase.com:5432/postgres"
+    ```
+    *See `SUPABASE_PRISMA_CONFIG.md` for detailed configuration instructions.*
+
+4.  **Database Setup**:
+    Sync the schema and seed the database with initial cues.
+    ```bash
+    npx prisma db push
+    npx prisma db seed
+    ```
+
+5.  **Run the Development Server**:
+    ```bash
+    npm run dev
+    ```
+
+    Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## 📂 Project Structure
+
+*   `app/`: Next.js App Router pages and layouts.
+    *   `actions/`: Server Actions for data mutation (`user.ts`, `cues.ts`).
+    *   `dashboard/`: Core application views (Daily Cue, Library, Profile).
+    *   `onboarding/`: Initial user assessment flow.
+*   `components/`: React components.
+    *   `ui/`: Shadcn/UI primitives.
+    *   `daily-cue-card.tsx`: The main interactive component.
+    *   `charisma-meter.tsx`: Visual progress tracker.
+*   `lib/`: Utilities and configuration.
+    *   `prisma.ts`: Database client singleton.
+    *   `validations/`: Zod schemas.
+*   `prisma/`: Database schema and seed scripts.
