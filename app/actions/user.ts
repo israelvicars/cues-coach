@@ -8,9 +8,13 @@ import { redirect } from "next/navigation"
 import { Archetype } from "@prisma/client"
 
 export async function createUser(data: z.infer<typeof onboardingSchema>) {
-    const result = onboardingSchema.safeParse(data)
+    // Next.js may wrap the data in an array when called from client components
+    const unwrappedData = Array.isArray(data) ? data[0] : data
+
+    const result = onboardingSchema.safeParse(unwrappedData)
 
     if (!result.success) {
+        console.error("Validation error:", result.error)
         return { error: "Invalid data" }
     }
 
